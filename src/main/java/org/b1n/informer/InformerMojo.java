@@ -17,6 +17,8 @@ import org.b1n.informer.ds.DataSender;
  * The Informer.
  * @author Marcio Ribeiro
  * @date Jan 19, 2008
+ * @goal informer
+ * @aggregator
  */
 public class InformerMojo extends AbstractMojo {
     /**
@@ -49,9 +51,9 @@ public class InformerMojo extends AbstractMojo {
     private String dataSender;
 
     /** Logger. */
-    private static final Logger log = Logger.getLogger(InformerMojo.class);
+    private static final Logger LOG = Logger.getLogger(InformerMojo.class);
 
-    /**""
+    /**
      * Let the magic begin.
      * @throws MojoExecutionException erro.
      * @throws MojoFailureException falha.
@@ -75,7 +77,7 @@ public class InformerMojo extends AbstractMojo {
             try {
                 ds.sendData(data);
             } catch (CouldNotSendDataException e) {
-                log.error(e);
+                LOG.error(e);
             }
         }
     }
@@ -83,7 +85,6 @@ public class InformerMojo extends AbstractMojo {
     /**
      * Cria data sender.
      * @return instancia de data sender.
-     * @throws MojoFailureException caso nao consiga criar data sender.
      */
     @SuppressWarnings("unchecked")
     private DataSender createDataSender() {
@@ -92,15 +93,15 @@ public class InformerMojo extends AbstractMojo {
             Constructor<DataSender> constructor = dsClass.getDeclaredConstructor(new Class[] { String.class });
             return constructor.newInstance(this.server);
         } catch (NoSuchMethodException e) {
-            log.error(e);
+            LOG.error(e);
         } catch (InstantiationException e) {
-            log.error(e);
+            LOG.error(e);
         } catch (IllegalAccessException e) {
-            log.error(e);
+            LOG.error(e);
         } catch (InvocationTargetException e) {
-            log.error(e);
+            LOG.error(e);
         } catch (ClassNotFoundException e) {
-            log.error(e);
+            LOG.error(e);
         }
         return null;
     }

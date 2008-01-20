@@ -22,6 +22,8 @@ public class GetHttpDataSender extends HttpDataSender {
 
     /**
      * Devolve metodo get populado com parametros para request.
+     * @param data dados.
+     * @return metodo.
      */
     @Override
     protected HttpMethod getMethod(Map<String, String> data) {

@@ -16,6 +16,7 @@ import org.apache.commons.httpclient.NameValuePair;
  * @date Jan 19, 2008
  */
 public abstract class HttpDataSender implements DataSender {
+    /** Sever url. */
     private String serverUrl;
 
     /**
@@ -29,6 +30,7 @@ public abstract class HttpDataSender implements DataSender {
     /**
      * Envia dados.
      * @param data dados.
+     * @throws CouldNotSendDataException caso nao consiga enviar dados.
      */
     public void sendData(Map<String, String> data) throws CouldNotSendDataException {
         HttpMethod method = getMethod(data);
@@ -44,6 +46,11 @@ public abstract class HttpDataSender implements DataSender {
         }
     }
 
+    /**
+     * Devolve metodo a ser usado.
+     * @param data dados.
+     * @return metodo.
+     */
     protected abstract HttpMethod getMethod(Map<String, String> data);
 
     /**
@@ -56,7 +63,7 @@ public abstract class HttpDataSender implements DataSender {
         for (Map.Entry<String, String> entry : data.entrySet()) {
             params.add(new NameValuePair(entry.getKey(), entry.getValue()));
         }
-        return (NameValuePair[]) params.toArray();
+        return params.toArray(new NameValuePair[params.size()]);
     }
 
     /**
