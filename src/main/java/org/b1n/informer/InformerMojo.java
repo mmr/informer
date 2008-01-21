@@ -97,7 +97,7 @@ public class InformerMojo extends AbstractMojo {
             if (action.equals(DataSender.START_ACTION)) {
                 lastModule = reactorProjects.get(reactorProjects.size() - 1);
                 sendStartBuild();
-            } else if (action.equals(DataSender.END_ACTION) && lastModule == null) {
+            } else if (action.equals(DataSender.END_ACTION) && (lastModule == null || lastModule.equals(project))) {
                 // Projeto sem filhos
                 sendEndBuild();
             }
