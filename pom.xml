@@ -3,21 +3,16 @@
   <groupId>b1n</groupId>
   <artifactId>maven-informer-plugin</artifactId>
   <packaging>maven-plugin</packaging>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <name>maven-informer-plugin</name>
 
   <parent>
     <groupId>b1n</groupId>
     <artifactId>b1n-pom</artifactId>
-    <version>0.0.2</version>
+    <version>1.0.2</version>
   </parent>
 
   <dependencies>
-    <dependency>
-      <groupId>org.apache.maven</groupId>
-      <artifactId>maven-core</artifactId>
-      <version>2.0.8</version>
-    </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-project</artifactId>

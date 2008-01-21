@@ -28,7 +28,7 @@ public class StdoutDataSender implements DataSender {
      */
     public void sendData(Map<String, String> data) throws CouldNotSendDataException {
         for (Map.Entry<String, String> e : data.entrySet()) {
-            LOG.debug(e.getKey() + " = " + e.getValue());
+            LOG.info(e.getKey() + " = " + e.getValue());
         }
     }
 }
