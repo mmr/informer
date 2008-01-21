@@ -10,6 +10,8 @@ import org.apache.log4j.Logger;
  * @date Jan 19, 2008
  */
 public class StdoutDataSender implements DataSender {
+    private static long cx = 0;
+
     /** Logger. */
     private static final Logger LOG = Logger.getLogger(DataSender.class);
 
@@ -21,14 +23,26 @@ public class StdoutDataSender implements DataSender {
         // do nothing
     }
 
-    /**
-     * Envia dados.
-     * @param data dados.
-     * @throws CouldNotSendDataException caso nao consiga enviar dados.
-     */
-    public void sendData(Map<String, String> data) throws CouldNotSendDataException {
+    public void sendEndBuild(Map<String, String> data) throws CouldNotSendDataException {
+        showData(data);
+    }
+
+    public void sendEndModule(Map<String, String> data) throws CouldNotSendDataException {
+        showData(data);
+    }
+
+    public long sendStartBuild(Map<String, String> data) throws CouldNotSendDataException {
+        return showData(data);
+    }
+
+    public long sendStartModule(Map<String, String> data) throws CouldNotSendDataException {
+        return showData(data);
+    }
+
+    private long showData(Map<String, String> data) throws CouldNotSendDataException {
         for (Map.Entry<String, String> e : data.entrySet()) {
             LOG.info(e.getKey() + " = " + e.getValue());
         }
+        return cx++;
     }
 }

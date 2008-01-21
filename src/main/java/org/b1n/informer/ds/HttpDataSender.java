@@ -30,15 +30,55 @@ public abstract class HttpDataSender implements DataSender {
     /**
      * Envia dados.
      * @param data dados.
+     * @return id do build.
      * @throws CouldNotSendDataException caso nao consiga enviar dados.
      */
-    public void sendData(Map<String, String> data) throws CouldNotSendDataException {
+    public long sendStartBuild(Map<String, String> data) throws CouldNotSendDataException {
+        return Long.parseLong(sendRequest(data));
+    }
+
+    /**
+     * Envia dados.
+     * @param data dados.
+     * @throws CouldNotSendDataException caso nao consiga enviar dados.
+     */
+    public void sendEndBuild(Map<String, String> data) throws CouldNotSendDataException {
+        sendRequest(data);
+    }
+
+    /**
+     * Envia dados.
+     * @param data dados.
+     * @return id de modulo.
+     * @throws CouldNotSendDataException caso nao consiga enviar dados.
+     */
+    public long sendStartModule(Map<String, String> data) throws CouldNotSendDataException {
+        return Long.parseLong(sendRequest(data));
+    }
+
+    /**
+     * Envia dados.
+     * @param data dados.
+     * @throws CouldNotSendDataException caso nao consiga enviar dados.
+     */
+    public void sendEndModule(Map<String, String> data) throws CouldNotSendDataException {
+        sendRequest(data);
+    }
+
+    /**
+     * Envia dados.
+     * @param data dados.
+     * @return resposta.
+     * @throws CouldNotSendDataException caso nao consiga enviar dados.
+     */
+    private String sendRequest(Map<String, String> data) throws CouldNotSendDataException {
         HttpMethod method = getMethod(data);
         try {
             int statusCode = new HttpClient().executeMethod(method);
             if (statusCode != HttpStatus.SC_OK) {
                 throw new CouldNotSendDataException("Error: " + method.getStatusLine());
             }
+            return method.getResponseBodyAsString();
         } catch (IOException e) {
             throw new CouldNotSendDataException(e);
         } finally {

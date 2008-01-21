@@ -13,7 +13,7 @@ public class InfoRetriever {
      * Devolve o hostname da máquina.
      * @return o hostname da máquina.
      */
-    public String getHostname() {
+    public String getHostName() {
         try {
             return InetAddress.getLocalHost().getHostName();
         } catch (UnknownHostException e) {
@@ -21,6 +21,18 @@ public class InfoRetriever {
         }
     }
 
+    /**
+     * Devolve o ip da maquina.
+     * @return o ip da maquina.
+     */
+    public String getHostIp() {
+        try {
+            return InetAddress.getLocalHost().toString();
+        } catch (UnknownHostException e) {
+            return "unknown-host";
+        }
+    }
+    
     /**
      * Devolve a system property <code>user.name</code>.
      * @return a system property <code>user.name</code>.

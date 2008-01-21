@@ -21,8 +21,18 @@ import org.b1n.informer.ds.DataSender;
  * @goal informer
  */
 public class InformerMojo extends AbstractMojo {
-    /** Last module. */
+
+    /** Ultimo projeto. */
     private static MavenProject lastModule;
+
+    /** Id do build. */
+    private static long buildId;
+
+    /** Id do modulo. */
+    private static long moduleId;
+
+    /** Logger. */
+    private static final Logger LOG = Logger.getLogger(InformerMojo.class);
 
     /**
      * O projeto que executou o plugin.
@@ -66,13 +76,10 @@ public class InformerMojo extends AbstractMojo {
      * @parameter
      * @required
      */
-    private String dataSender;
+    private String dataSenderClassName;
 
-    /** Logger. */
-    private static final Logger LOG = Logger.getLogger(InformerMojo.class);
-
-    /** End action. */
-    private static final String END_ACTION = "end";
+    /** Cara que envia os dados. */
+    private DataSender dataSender;
 
     /**
      * Let the magic begin.
@@ -85,42 +92,129 @@ public class InformerMojo extends AbstractMojo {
             return;
         }
 
-        // Gambiarra para funcionar em projetos modulares
+        // Inicia build
         if (project.isExecutionRoot()) {
-            if (lastModule == null) {
+            if (action.equals(DataSender.START_ACTION)) {
                 lastModule = reactorProjects.get(reactorProjects.size() - 1);
-            } else if (!project.equals(lastModule)) {
-                return;
+                sendStartBuild();
+            } else if (action.equals(DataSender.END_ACTION) && lastModule == null) {
+                // Projeto sem filhos
+                sendEndBuild();
             }
-        } else {
-            if (project.equals(lastModule) && action.equals(END_ACTION)) {
-                project = reactorProjects.get(0);
-            } else {
-                return;
-            }
+            return;
         }
 
-        // Empacotando dados para data sender
-        InfoRetriever info = new InfoRetriever();
+        // Envia requests de modulos
+        if (action.equals(DataSender.START_ACTION)) {
+            sendStartModule();
+        } else if (action.equals(DataSender.END_ACTION)) {
+            sendEndModule();
+        }
 
+        // Se for ultimo modulo, deve terminar build
+        if (project.equals(lastModule) && action.equals(DataSender.END_ACTION)) {
+            sendEndBuild();
+        }
+    }
+
+    /**
+     * Envia mensagem de inicio de modulo.
+     */
+    private void sendStartModule() {
+        try {
+            DataSender ds = getDataSender();
+            moduleId = ds.sendStartModule(getStartModuleData());
+        } catch (CouldNotSendDataException e) {
+            LOG.debug(e.getCause());
+        }
+    }
+
+    /**
+     * Envia mensagem de fim de modulo.
+     */
+    private void sendEndModule() {
+        try {
+            DataSender ds = getDataSender();
+            ds.sendEndModule(getEndModuleData());
+        } catch (CouldNotSendDataException e) {
+            LOG.debug(e.getCause());
+        }
+    }
+
+    /**
+     * Envia mensagem de inicio de build.
+     */
+    private void sendStartBuild() {
+        try {
+            DataSender ds = getDataSender();
+            buildId = ds.sendStartBuild(getStartBuildData());
+        } catch (CouldNotSendDataException e) {
+            LOG.debug(e.getCause());
+        }
+    }
+
+    /**
+     * Envia mensagem de fim de build.
+     */
+    private void sendEndBuild() {
+        try {
+            DataSender ds = getDataSender();
+            ds.sendEndBuild(getEndBuildData());
+        } catch (CouldNotSendDataException e) {
+            LOG.debug(e.getCause());
+        }
+    }
+
+    /**
+     * @return dados para mensagem de inicio de build.
+     */
+    private Map<String, String> getStartBuildData() {
+        InfoRetriever info = new InfoRetriever();
         Map<String, String> data = new HashMap<String, String>();
-        data.put("action", this.action);
+        data.put("action", DataSender.START_BUILD_ACTION);
         data.put("project", project.getName());
         data.put("version", project.getVersion());
         data.put("groupId", project.getGroupId());
         data.put("artifactId", project.getArtifactId());
-        data.put("hostName", info.getHostname());
+        data.put("hostName", info.getHostName());
+        data.put("hostIp", info.getHostIp());
         data.put("userName", info.getUsername());
         data.put("jvm", info.getJvm());
         data.put("encoding", info.getFileEncoding());
+        return data;
+    }
 
-        // Envia dados
-        try {
-            DataSender ds = createDataSender();
-            ds.sendData(data);
-        } catch (CouldNotSendDataException e) {
-            LOG.debug(e.getCause());
-        }
+    /**
+     * @return dados para mensagem de inicio de modulo.
+     */
+    private Map<String, String> getStartModuleData() {
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("action", DataSender.START_MODULE_ACTION);
+        data.put("groupId", project.getGroupId());
+        data.put("artifactId", project.getArtifactId());
+        data.put("version", project.getVersion());
+        data.put("buildId", String.valueOf(buildId));
+        return data;
+    }
+
+    /**
+     * @return dados para mensagem de fim de build.
+     */
+    private Map<String, String> getEndBuildData() {
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("action", DataSender.END_BUILD_ACTION);
+        data.put("buildId", String.valueOf(buildId));
+        return data;
+    }
+
+    /**
+     * @return dados para mensagem de fim de modulo.
+     */
+    private Map<String, String> getEndModuleData() {
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("action", DataSender.END_MODULE_ACTION);
+        data.put("moduleId", String.valueOf(moduleId));
+        return data;
     }
 
     /**
@@ -129,9 +223,12 @@ public class InformerMojo extends AbstractMojo {
      * @throws CouldNotSendDataException caso nao consiga enviar dados.
      */
     @SuppressWarnings("unchecked")
-    private DataSender createDataSender() throws CouldNotSendDataException {
+    private DataSender getDataSender() throws CouldNotSendDataException {
+        if (dataSender != null) {
+            return dataSender;
+        }
         try {
-            Class<DataSender> dsClass = (Class<DataSender>) Class.forName(this.dataSender);
+            Class<DataSender> dsClass = (Class<DataSender>) Class.forName(this.dataSenderClassName);
             Constructor<DataSender> constructor = dsClass.getDeclaredConstructor(new Class[] { String.class });
             return constructor.newInstance(this.server);
         } catch (NoSuchMethodException e) {
