@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -21,6 +22,13 @@ import org.b1n.informer.ds.DataSender;
  * @aggregator
  */
 public class InformerMojo extends AbstractMojo {
+    /** Info about calls. */
+    private static final ThreadLocal<Map<MavenProject, String>> CALLS;
+    static {
+        CALLS = new ThreadLocal<Map<MavenProject, String>>();
+        CALLS.set(new HashMap<MavenProject, String>());
+    }
+
     /**
      * The maven project.
      * @parameter expression="${project}"
@@ -28,6 +36,14 @@ public class InformerMojo extends AbstractMojo {
      * @readonly
      */
     private MavenProject project;
+
+    /**
+     * The maven session.
+     * @parameter expression="${session}"
+     * @required
+     * @readonly
+     */
+    private MavenSession session;
 
     /**
      * URL para o servidor.
@@ -59,6 +75,8 @@ public class InformerMojo extends AbstractMojo {
      * @throws MojoFailureException falha.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
+        //        calls.put(project.getArtifactId(), new Date());
+
         InfoRetriever info = new InfoRetriever();
 
         Map<String, String> data = new HashMap<String, String>();
@@ -77,9 +95,13 @@ public class InformerMojo extends AbstractMojo {
             try {
                 ds.sendData(data);
             } catch (CouldNotSendDataException e) {
-                LOG.error(e);
+                LOG.error(e.getCause());
             }
         }
+        //
+        //        for (Map.Entry<String, Date> e : calls.entrySet()) {
+        //            LOG.error(e.getKey() + " : " + e.getValue());
+        //        }
     }
 
     /**
