@@ -22,7 +22,7 @@ import org.b1n.informer.ds.DataSender;
  */
 public class InformerMojo extends AbstractMojo {
     /** Last module. */
-    private static ThreadLocal<MavenProject> lastModule = new ThreadLocal<MavenProject>();
+    private static MavenProject lastModule;
 
     /**
      * O projeto que executou o plugin.
@@ -87,13 +87,13 @@ public class InformerMojo extends AbstractMojo {
 
         // Gambiarra para funcionar em projetos modulares
         if (project.isExecutionRoot()) {
-            if (lastModule.get() == null) {
-                lastModule.set(reactorProjects.get(reactorProjects.size() - 1));
-            } else if (!project.equals(lastModule.get())) {
+            if (lastModule == null) {
+                lastModule = reactorProjects.get(reactorProjects.size() - 1);
+            } else if (!project.equals(lastModule)) {
                 return;
             }
         } else {
-            if (project.equals(lastModule.get()) && action.equals(END_ACTION)) {
+            if (project.equals(lastModule) && action.equals(END_ACTION)) {
                 project = reactorProjects.get(0);
             } else {
                 return;
@@ -119,7 +119,7 @@ public class InformerMojo extends AbstractMojo {
             DataSender ds = createDataSender();
             ds.sendData(data);
         } catch (CouldNotSendDataException e) {
-            LOG.error(e.getCause());
+            LOG.debug(e.getCause());
         }
     }
 
