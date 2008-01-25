@@ -2,15 +2,26 @@ package org.b1n.informer;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Date;
+
+import org.apache.maven.project.MavenProject;
 
 /**
- * Info Retriever.
  * @author Marcio Ribeiro
- * @date Jan 19, 2008
+ * @date Jan 24, 2008
  */
-public class InfoRetriever {
+public class MasterProjectInfo extends BuildInfo {
+
     /**
-     * Devolve o hostname da máquina.
+     * Construtor.
+     * @param project projeto.
+     * @param startTime hora de inicio.
+     */
+    public MasterProjectInfo(MavenProject project, Date startTime) {
+        super(project, startTime);
+    }
+
+    /**
      * @return o hostname da máquina.
      */
     public String getHostName() {
@@ -22,7 +33,6 @@ public class InfoRetriever {
     }
 
     /**
-     * Devolve o ip da maquina.
      * @return o ip da maquina.
      */
     public String getHostIp() {
@@ -32,25 +42,33 @@ public class InfoRetriever {
             return "unknown-host";
         }
     }
-    
+
     /**
-     * Devolve a system property <code>user.name</code>.
-     * @return a system property <code>user.name</code>.
+     * @return o usuario.
      */
-    public String getUsername() {
+    public String getUserName() {
         return System.getProperty("user.name");
     }
 
     /**
-     * Devolve a system property <code>file.encoding</code>.
-     * @return a system property <code>file.encoding</code>.
+     * @return dados sobre o sistema operacional.
      */
-    public String getFileEncoding() {
+    public String getOperatingSystem() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(System.getProperty("os.name")).append(" ");
+        sb.append(System.getProperty("os.version")).append(" ");
+        sb.append(System.getProperty("os.arch"));
+        return sb.toString();
+    }
+
+    /**
+     * @return o encoding usado na maquina.
+     */
+    public String getEncoding() {
         return System.getProperty("file.encoding");
     }
 
     /**
-     * Devolve o nome e versão da JVM.
      * @return o nome e versão da JVM.
      */
     public String getJvm() {

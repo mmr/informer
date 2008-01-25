@@ -2,6 +2,7 @@ package org.b1n.informer.ds;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,52 +28,10 @@ public abstract class HttpDataSender implements DataSender {
         this.serverUrl = serverUrl;
     }
 
-    /**
-     * Envia dados.
-     * @param data dados.
-     * @return id do build.
-     * @throws CouldNotSendDataException caso nao consiga enviar dados.
-     */
-    public long sendStartBuild(Map<String, String> data) throws CouldNotSendDataException {
-        return Long.parseLong(sendRequest(data));
-    }
-
-    /**
-     * Envia dados.
-     * @param data dados.
-     * @throws CouldNotSendDataException caso nao consiga enviar dados.
-     */
-    public void sendEndBuild(Map<String, String> data) throws CouldNotSendDataException {
-        sendRequest(data);
-    }
-
-    /**
-     * Envia dados.
-     * @param data dados.
-     * @return id de modulo.
-     * @throws CouldNotSendDataException caso nao consiga enviar dados.
-     */
-    public long sendStartModule(Map<String, String> data) throws CouldNotSendDataException {
-        return Long.parseLong(sendRequest(data));
-    }
-
-    /**
-     * Envia dados.
-     * @param data dados.
-     * @throws CouldNotSendDataException caso nao consiga enviar dados.
-     */
-    public void sendEndModule(Map<String, String> data) throws CouldNotSendDataException {
-        sendRequest(data);
-    }
-
-    /**
-     * Envia dados.
-     * @param data dados.
-     * @return resposta.
-     * @throws CouldNotSendDataException caso nao consiga enviar dados.
-     */
-    private String sendRequest(Map<String, String> data) throws CouldNotSendDataException {
-        HttpMethod method = getMethod(data);
+    public String sendData(final String data) throws CouldNotSendDataException {
+        Map<String, String> d = new HashMap<String, String>();
+        d.put("buildInfo", data);
+        HttpMethod method = getMethod(d);
         try {
             int statusCode = new HttpClient().executeMethod(method);
             if (statusCode != HttpStatus.SC_OK) {

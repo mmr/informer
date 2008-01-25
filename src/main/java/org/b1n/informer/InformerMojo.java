@@ -2,11 +2,15 @@ package org.b1n.informer;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
+
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -23,16 +27,26 @@ import org.b1n.informer.ds.DataSender;
 public class InformerMojo extends AbstractMojo {
 
     /** Ultimo projeto. */
-    private static MavenProject lastModule;
+    private static MavenProject lastProject;
 
-    /** Id do build. */
-    private static long buildId;
+    /** Mantem dados sobre modulos para mandar de uma vez no final. */
+    private static final Map<String, ModuleInfo> modules = new HashMap<String, ModuleInfo>();
 
-    /** Id do modulo. */
-    private static long moduleId;
+    /** Dados sobre o projeto pai. */
+    private static MasterProjectInfo masterProjectInfo;
 
-    /** Logger. */
-    private static final Logger LOG = Logger.getLogger(InformerMojo.class);
+    /** Action para inicio. */
+    private static final String START_ACTION = "start";
+
+    /** Action para fim. */
+    private static final String END_ACTION = "end";
+
+    /**
+     * @parameter expression="${session}"
+     * @required
+     * @readonly
+     */
+    private MavenSession session;
 
     /**
      * O projeto que executou o plugin.
@@ -94,127 +108,62 @@ public class InformerMojo extends AbstractMojo {
 
         // Inicia build
         if (project.isExecutionRoot()) {
-            if (action.equals(DataSender.START_ACTION)) {
-                lastModule = reactorProjects.get(reactorProjects.size() - 1);
-                sendStartBuild();
-            } else if (action.equals(DataSender.END_ACTION) && (lastModule == null || lastModule.equals(project))) {
+            if (action.equals(START_ACTION)) {
+                lastProject = reactorProjects.get(reactorProjects.size() - 1);
+                startTimeMasterProject();
+            } else if (action.equals(END_ACTION) && lastProject.equals(project)) {
                 // Projeto sem filhos
-                sendEndBuild();
+                sendBuildInfo();
             }
             return;
         }
 
-        // Envia requests de modulos
-        if (action.equals(DataSender.START_ACTION)) {
-            sendStartModule();
-        } else if (action.equals(DataSender.END_ACTION)) {
-            sendEndModule();
+        // Cuida de tempos de projetos filhos
+        if (action.equals(START_ACTION)) {
+            startTimeModule();
+        } else if (action.equals(END_ACTION)) {
+            endTimeModule();
         }
 
-        // Se for ultimo modulo, deve terminar build
-        if (project.equals(lastModule) && action.equals(DataSender.END_ACTION)) {
-            sendEndBuild();
+        // Se for ultimo projeto, deve terminar build
+        if (project.equals(lastProject) && action.equals(END_ACTION)) {
+            endTimeMasterProject();
+            sendBuildInfo();
         }
     }
 
-    /**
-     * Envia mensagem de inicio de modulo.
-     */
-    private void sendStartModule() {
-        try {
-            DataSender ds = getDataSender();
-            moduleId = ds.sendStartModule(getStartModuleData());
-        } catch (CouldNotSendDataException e) {
-            LOG.debug(e.getCause());
-        }
+    private void startTimeMasterProject() {
+        masterProjectInfo = new MasterProjectInfo(project, session.getStartTime());
     }
 
-    /**
-     * Envia mensagem de fim de modulo.
-     */
-    private void sendEndModule() {
-        try {
-            DataSender ds = getDataSender();
-            ds.sendEndModule(getEndModuleData());
-        } catch (CouldNotSendDataException e) {
-            LOG.debug(e.getCause());
-        }
+    private void endTimeMasterProject() {
+        masterProjectInfo.setEndTime(new Date());
     }
 
-    /**
-     * Envia mensagem de inicio de build.
-     */
-    private void sendStartBuild() {
-        try {
-            DataSender ds = getDataSender();
-            buildId = ds.sendStartBuild(getStartBuildData());
-        } catch (CouldNotSendDataException e) {
-            LOG.debug(e.getCause());
-        }
+    private void startTimeModule() {
+        modules.put(project.getId(), new ModuleInfo(project));
+    }
+
+    private void endTimeModule() {
+        modules.get(project.getId()).setEndTime(new Date());
     }
 
     /**
      * Envia mensagem de fim de build.
      */
-    private void sendEndBuild() {
+    private void sendBuildInfo() {
         try {
             DataSender ds = getDataSender();
-            ds.sendEndBuild(getEndBuildData());
+
+            JSONObject json = new JSONObject();
+            json.put("masterProject", masterProjectInfo);
+            if (!modules.isEmpty()) {
+                json.put("modules", modules.values());
+            }
+            ds.sendData(JSONSerializer.toJSON(json).toString());
         } catch (CouldNotSendDataException e) {
-            LOG.debug(e.getCause());
+            getLog().debug(e.getCause());
         }
-    }
-
-    /**
-     * @return dados para mensagem de inicio de build.
-     */
-    private Map<String, String> getStartBuildData() {
-        InfoRetriever info = new InfoRetriever();
-        Map<String, String> data = new HashMap<String, String>();
-        data.put("action", DataSender.START_BUILD_ACTION);
-        data.put("project", project.getName());
-        data.put("version", project.getVersion());
-        data.put("groupId", project.getGroupId());
-        data.put("artifactId", project.getArtifactId());
-        data.put("hostName", info.getHostName());
-        data.put("hostIp", info.getHostIp());
-        data.put("userName", info.getUsername());
-        data.put("jvm", info.getJvm());
-        data.put("encoding", info.getFileEncoding());
-        return data;
-    }
-
-    /**
-     * @return dados para mensagem de inicio de modulo.
-     */
-    private Map<String, String> getStartModuleData() {
-        Map<String, String> data = new HashMap<String, String>();
-        data.put("action", DataSender.START_MODULE_ACTION);
-        data.put("groupId", project.getGroupId());
-        data.put("artifactId", project.getArtifactId());
-        data.put("version", project.getVersion());
-        data.put("buildId", String.valueOf(buildId));
-        return data;
-    }
-
-    /**
-     * @return dados para mensagem de fim de build.
-     */
-    private Map<String, String> getEndBuildData() {
-        Map<String, String> data = new HashMap<String, String>();
-        data.put("action", DataSender.END_BUILD_ACTION);
-        data.put("buildId", String.valueOf(buildId));
-        return data;
-    }
-
-    /**
-     * @return dados para mensagem de fim de modulo.
-     */
-    private Map<String, String> getEndModuleData() {
-        Map<String, String> data = new HashMap<String, String>();
-        data.put("action", DataSender.END_MODULE_ACTION);
-        data.put("moduleId", String.valueOf(moduleId));
-        return data;
     }
 
     /**

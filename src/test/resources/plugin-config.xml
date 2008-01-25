@@ -1,0 +1,15 @@
+<project>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>b1n.maven</groupId>
+        <artifactId>maven-informer-plugin</artifactId>
+        <version>3.0.0</version>
+        <configuration>
+          <server>http://localhost:8080/receiver/saveInfo</server>
+          <dataSenderClassName>org.b1n.informer.ds.StdoutDataSender</dataSenderClassName>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
