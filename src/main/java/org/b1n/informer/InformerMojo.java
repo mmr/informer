@@ -105,6 +105,8 @@ public class InformerMojo extends AbstractMojo {
             return;
         }
 
+        //        session.getSettings().
+
         // Inicia build
         if (project.isExecutionRoot()) {
             if (action.equals(START_ACTION)) {
@@ -136,7 +138,7 @@ public class InformerMojo extends AbstractMojo {
      * Marca inicio de build de projeto pai.
      */
     private void startTimeMasterProject() {
-        masterProjectInfo = new MasterProjectInfo(project, session.getStartTime());
+        masterProjectInfo = new MasterProjectInfo(project, session);
     }
 
     /**
@@ -150,7 +152,7 @@ public class InformerMojo extends AbstractMojo {
      * Marca inicio de build de modulo.
      */
     private void startTimeModule() {
-        MODULES.put(project.getId(), new BuildInfo(project));
+        MODULES.put(project.getId(), new BuildInfo(project, session));
     }
 
     /**

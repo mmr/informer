@@ -2,6 +2,7 @@ package org.b1n.informer;
 
 import java.util.Date;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -11,6 +12,8 @@ import org.apache.maven.project.MavenProject;
 public class BuildInfo {
     private MavenProject project;
 
+    private MavenSession session;
+
     private Date startTime;
 
     private long buildTime;
@@ -18,26 +21,36 @@ public class BuildInfo {
     /**
      * Construtor.
      * @param project projeto.
+     * @param session sessao do maven.
      */
-    public BuildInfo(MavenProject project) {
-        this(project, new Date());
+    public BuildInfo(MavenProject project, MavenSession session) {
+        this(project, session, new Date());
     }
 
     /**
      * Construtor.
      * @param project projeto.
+     * @param session sessao do maven.
      * @param startTime hora de inicio.
      */
-    public BuildInfo(MavenProject project, Date startTime) {
+    public BuildInfo(MavenProject project, MavenSession session, Date startTime) {
         this.project = project;
         this.startTime = startTime;
+        this.session = session;
     }
 
     /**
-     * @return <code>true</code> se build esta pulando testes, <code>false</code> caso contrario.
+     * @return <code>true</code> se build esta executando testes, <code>false</code> caso contrario.
      */
-    public boolean isSkipTests() {
-        return "true".equals(System.getProperty("maven.test.skip"));
+    public boolean isWithTests() {
+        return !"true".equals(System.getProperty("maven.test.skip"));
+    }
+
+    /**
+     * @return <code>true</code> se alem de install tiver deploy envolvido, <code>false</code> caso contrario.
+     */
+    public boolean isDeploy() {
+        return session.getGoals().contains("deploy");
     }
 
     /**

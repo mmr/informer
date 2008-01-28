@@ -2,8 +2,8 @@ package org.b1n.informer;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Date;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 
 /**
@@ -15,10 +15,10 @@ public class MasterProjectInfo extends BuildInfo {
     /**
      * Construtor.
      * @param project projeto.
-     * @param startTime hora de inicio.
+     * @param session sessao do maven.
      */
-    public MasterProjectInfo(MavenProject project, Date startTime) {
-        super(project, startTime);
+    public MasterProjectInfo(MavenProject project, MavenSession session) {
+        super(project, session, session.getStartTime());
     }
 
     /**
