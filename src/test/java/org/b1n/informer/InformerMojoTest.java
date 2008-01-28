@@ -9,13 +9,17 @@ import org.apache.maven.plugin.testing.AbstractMojoTestCase;
  * @date Jan 25, 2008
  */
 public class InformerMojoTest extends AbstractMojoTestCase {
+    /**
+     * Setup.
+     * @throws Exception caso algo de errado ocorra ao fazer setup.
+     */
     protected void setUp() throws Exception {
         super.setUp();
     }
 
     /**
-     * tests the proper discovery and configuration of the mojo
-     * @throws Exception
+     * Teste de plugin.
+     * @throws Exception caso algo de errado aconteca.
      */
     public void testInformer() throws Exception {
         File testPom = new File(getBasedir(), "target/test-classes/plugin-config.xml");

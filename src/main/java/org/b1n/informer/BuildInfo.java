@@ -8,17 +8,16 @@ import org.apache.maven.project.MavenProject;
  * @author Marcio Ribeiro
  * @date Jan 24, 2008
  */
-public abstract class BuildInfo {
+public class BuildInfo {
     private MavenProject project;
 
     private Date startTime;
 
-    private Date endTime;
+    private long buildTime;
 
     /**
      * Construtor.
      * @param project projeto.
-     * @param startTime hora de inicio.
      */
     public BuildInfo(MavenProject project) {
         this(project, new Date());
@@ -32,21 +31,6 @@ public abstract class BuildInfo {
     public BuildInfo(MavenProject project, Date startTime) {
         this.project = project;
         this.startTime = startTime;
-    }
-
-    /**
-     * @return hora do fim do build.
-     */
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    /**
-     * Define a hora de termino do build.
-     * @param endTime hora do fim do build.
-     */
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
     }
 
     /**
@@ -82,5 +66,20 @@ public abstract class BuildInfo {
      */
     public Date getStartTime() {
         return startTime;
+    }
+
+    /**
+     * @return o tempo de build em milisegundos.
+     */
+    public long getBuildTime() {
+        return buildTime;
+    }
+
+    /**
+     * Calcula o tempo de build e define o buildTime.
+     */
+    public void calculateBuildTime() {
+        long currentTs = new Date().getTime();
+        buildTime = currentTs - startTime.getTime();
     }
 }

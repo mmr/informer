@@ -28,6 +28,12 @@ public abstract class HttpDataSender implements DataSender {
         this.serverUrl = serverUrl;
     }
 
+    /**
+     * Envia dados para servidor.
+     * @param data dados.
+     * @throws CouldNotSendDataException caso nao consiga enviar dados.
+     * @return resposta.
+     */
     public String sendData(final String data) throws CouldNotSendDataException {
         Map<String, String> d = new HashMap<String, String>();
         d.put("buildInfo", data);

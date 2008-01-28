@@ -2,7 +2,6 @@ package org.b1n.informer;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,7 +29,7 @@ public class InformerMojo extends AbstractMojo {
     private static MavenProject lastProject;
 
     /** Mantem dados sobre modulos para mandar de uma vez no final. */
-    private static final Map<String, ModuleInfo> modules = new HashMap<String, ModuleInfo>();
+    private static final Map<String, BuildInfo> MODULES = new HashMap<String, BuildInfo>();
 
     /** Dados sobre o projeto pai. */
     private static MasterProjectInfo masterProjectInfo;
@@ -133,20 +132,32 @@ public class InformerMojo extends AbstractMojo {
         }
     }
 
+    /**
+     * Marca inicio de build de projeto pai.
+     */
     private void startTimeMasterProject() {
         masterProjectInfo = new MasterProjectInfo(project, session.getStartTime());
     }
 
+    /**
+     * Marca fim de build de projeto pai.
+     */
     private void endTimeMasterProject() {
-        masterProjectInfo.setEndTime(new Date());
+        masterProjectInfo.calculateBuildTime();
     }
 
+    /**
+     * Marca inicio de build de modulo.
+     */
     private void startTimeModule() {
-        modules.put(project.getId(), new ModuleInfo(project));
+        MODULES.put(project.getId(), new BuildInfo(project));
     }
 
+    /**
+     * Marca fim de build de modulo.
+     */
     private void endTimeModule() {
-        modules.get(project.getId()).setEndTime(new Date());
+        MODULES.get(project.getId()).calculateBuildTime();
     }
 
     /**
@@ -158,8 +169,8 @@ public class InformerMojo extends AbstractMojo {
 
             JSONObject json = new JSONObject();
             json.put("masterProject", masterProjectInfo);
-            if (!modules.isEmpty()) {
-                json.put("modules", modules.values());
+            if (!MODULES.isEmpty()) {
+                json.put("modules", MODULES.values());
             }
             ds.sendData(JSONSerializer.toJSON(json).toString());
         } catch (CouldNotSendDataException e) {

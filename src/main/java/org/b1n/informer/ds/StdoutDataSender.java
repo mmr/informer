@@ -16,6 +16,12 @@ public class StdoutDataSender implements DataSender {
         // do nothing
     }
 
+    /**
+     * Mostra dados em stdout.
+     * @param data dados.
+     * @return resposta.
+     * @throws CouldNotSendDataException caso nao consiga mostrar dados.
+     */
     public String sendData(String data) throws CouldNotSendDataException {
         System.out.println(data);
         return String.valueOf(cx++);
