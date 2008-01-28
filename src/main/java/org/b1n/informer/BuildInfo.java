@@ -34,6 +34,13 @@ public class BuildInfo {
     }
 
     /**
+     * @return <code>true</code> se build esta pulando testes, <code>false</code> caso contrario.
+     */
+    public boolean isSkipTests() {
+        return "true".equals(System.getProperty("maven.test.skip"));
+    }
+
+    /**
      * @return versao do artefato.
      */
     public String getVersion() {
