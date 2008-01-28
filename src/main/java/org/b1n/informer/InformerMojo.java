@@ -113,6 +113,7 @@ public class InformerMojo extends AbstractMojo {
                 startTimeMasterProject();
             } else if (action.equals(END_ACTION) && lastProject.equals(project)) {
                 // Projeto sem filhos
+                endTimeMasterProject();
                 sendBuildInfo();
             }
             return;
