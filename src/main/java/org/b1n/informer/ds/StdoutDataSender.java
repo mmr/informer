@@ -1,12 +1,14 @@
 package org.b1n.informer.ds;
 
+import org.apache.log4j.Logger;
+
 /**
  * Data Sender que mostra parametros em stdout.
  * @author Marcio Ribeiro
  * @date Jan 19, 2008
  */
 public class StdoutDataSender implements DataSender {
-    private static long cx = 0;
+    private static final Logger LOG = Logger.getLogger(StdoutDataSender.class);
 
     /**
      * Construtor.
@@ -23,7 +25,7 @@ public class StdoutDataSender implements DataSender {
      * @throws CouldNotSendDataException caso nao consiga mostrar dados.
      */
     public String sendData(String data) throws CouldNotSendDataException {
-        System.out.println(data);
-        return String.valueOf(cx++);
+        LOG.info(data);
+        return null;
     }
 }

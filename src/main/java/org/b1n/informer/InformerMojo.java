@@ -85,8 +85,15 @@ public class InformerMojo extends AbstractMojo {
     private String action;
 
     /**
+     * Tempo minimo para considerar build.
+     * @parameter default-value="20000"
+     * @required
+     */
+    private Integer minimumBuildTime;
+
+    /**
      * Classe do data sender.
-     * @parameter
+     * @parameter default-value="org.b1n.informer.ds.StdoutDataSender"
      * @required
      */
     private String dataSenderClassName;
@@ -114,7 +121,6 @@ public class InformerMojo extends AbstractMojo {
                 startTimeMasterProject();
             } else if (action.equals(END_ACTION) && lastProject.equals(project)) {
                 // Projeto sem filhos
-                endTimeMasterProject();
                 sendBuildInfo();
             }
             return;
@@ -129,7 +135,6 @@ public class InformerMojo extends AbstractMojo {
 
         // Se for ultimo projeto, deve terminar build
         if (project.equals(lastProject) && action.equals(END_ACTION)) {
-            endTimeMasterProject();
             sendBuildInfo();
         }
     }
@@ -166,6 +171,12 @@ public class InformerMojo extends AbstractMojo {
      * Envia mensagem de fim de build.
      */
     private void sendBuildInfo() {
+        endTimeMasterProject();
+        if (masterProjectInfo.getBuildTime() < minimumBuildTime) {
+            getLog().info("Fast build!");
+            return;
+        }
+
         try {
             DataSender ds = getDataSender();
 
@@ -176,7 +187,7 @@ public class InformerMojo extends AbstractMojo {
             }
             ds.sendData(JSONSerializer.toJSON(json).toString());
         } catch (CouldNotSendDataException e) {
-            getLog().debug(e.getCause());
+            getLog().info(e.getCause());
         }
     }
 
