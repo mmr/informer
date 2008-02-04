@@ -93,7 +93,7 @@ public class InformerMojo extends AbstractMojo {
 
     /**
      * Classe do data sender.
-     * @parameter default-value="org.b1n.informer.ds.StdoutDataSender"
+     * @parameter default-value="org.b1n.informer.ds.PostHttpDataSender"
      * @required
      */
     private String dataSenderClassName;
