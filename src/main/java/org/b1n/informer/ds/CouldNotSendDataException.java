@@ -9,14 +9,14 @@ public class CouldNotSendDataException extends Exception {
     /**
      * @param e causa.
      */
-    public CouldNotSendDataException(Throwable e) {
+    public CouldNotSendDataException(final Throwable e) {
         super(e);
     }
 
     /**
      * @param msg mensagem.
      */
-    public CouldNotSendDataException(String msg) {
+    public CouldNotSendDataException(final String msg) {
         super(msg);
     }
 
@@ -24,7 +24,7 @@ public class CouldNotSendDataException extends Exception {
      * @param msg mensagem.
      * @param e causa.
      */
-    public CouldNotSendDataException(String msg, Throwable e) {
+    public CouldNotSendDataException(final String msg, final Throwable e) {
         super(msg, e);
     }
 }

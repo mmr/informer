@@ -17,7 +17,7 @@ public class MasterProjectInfo extends BuildInfo {
      * @param project projeto.
      * @param session sessao do maven.
      */
-    public MasterProjectInfo(MavenProject project, MavenSession session) {
+    public MasterProjectInfo(final MavenProject project, final MavenSession session) {
         super(project, session, session.getStartTime());
     }
 
@@ -54,7 +54,7 @@ public class MasterProjectInfo extends BuildInfo {
      * @return dados sobre o sistema operacional.
      */
     public String getOperatingSystem() {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append(System.getProperty("os.name")).append(" ");
         sb.append(System.getProperty("os.version")).append(" ");
         sb.append(System.getProperty("os.arch"));
@@ -72,7 +72,7 @@ public class MasterProjectInfo extends BuildInfo {
      * @return o nome e versão da JVM.
      */
     public String getJvm() {
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append(System.getProperty("java.vm.vendor")).append(" ");
         sb.append(System.getProperty("java.vm.name")).append(" ");
         sb.append(System.getProperty("java.vm.version"));

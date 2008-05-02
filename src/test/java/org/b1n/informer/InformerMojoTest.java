@@ -22,8 +22,8 @@ public class InformerMojoTest extends AbstractMojoTestCase {
      * @throws Exception caso algo de errado aconteca.
      */
     public void testInformer() throws Exception {
-        File testPom = new File(getBasedir(), "target/test-classes/plugin-config.xml");
-        InformerMojo mojo = (InformerMojo) lookupMojo("informer", testPom);
+        final File testPom = new File(getBasedir(), "target/test-classes/plugin-config.xml");
+        final InformerMojo mojo = (InformerMojo) lookupMojo("informer", testPom);
         assertNotNull(mojo);
     }
 }

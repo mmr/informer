@@ -18,13 +18,13 @@ import org.apache.commons.httpclient.NameValuePair;
  */
 public abstract class HttpDataSender implements DataSender {
     /** Sever url. */
-    private String serverUrl;
+    private final String serverUrl;
 
     /**
      * Construtor.
      * @param serverUrl url de servidor.
      */
-    public HttpDataSender(String serverUrl) {
+    public HttpDataSender(final String serverUrl) {
         this.serverUrl = serverUrl;
     }
 
@@ -35,16 +35,16 @@ public abstract class HttpDataSender implements DataSender {
      * @return resposta.
      */
     public String sendData(final String data) throws CouldNotSendDataException {
-        Map<String, String> d = new HashMap<String, String>();
+        final Map<String, String> d = new HashMap<String, String>();
         d.put("buildInfo", data);
-        HttpMethod method = getMethod(d);
+        final HttpMethod method = getMethod(d);
         try {
-            int statusCode = new HttpClient().executeMethod(method);
+            final int statusCode = new HttpClient().executeMethod(method);
             if (statusCode != HttpStatus.SC_OK) {
                 throw new CouldNotSendDataException("Error: " + method.getStatusLine());
             }
             return method.getResponseBodyAsString();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CouldNotSendDataException(e);
         } finally {
             method.releaseConnection();
@@ -63,9 +63,9 @@ public abstract class HttpDataSender implements DataSender {
      * @param data mapa de dados.
      * @return array de NameValuePair.
      */
-    protected NameValuePair[] getNameValuePairs(Map<String, String> data) {
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-        for (Map.Entry<String, String> entry : data.entrySet()) {
+    protected NameValuePair[] getNameValuePairs(final Map<String, String> data) {
+        final List<NameValuePair> params = new ArrayList<NameValuePair>();
+        for (final Map.Entry<String, String> entry : data.entrySet()) {
             params.add(new NameValuePair(entry.getKey(), entry.getValue()));
         }
         return params.toArray(new NameValuePair[params.size()]);

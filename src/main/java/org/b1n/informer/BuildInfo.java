@@ -23,7 +23,7 @@ public class BuildInfo {
      * @param project projeto.
      * @param session sessao do maven.
      */
-    public BuildInfo(MavenProject project, MavenSession session) {
+    public BuildInfo(final MavenProject project, final MavenSession session) {
         this(project, session, new Date());
     }
 
@@ -33,7 +33,7 @@ public class BuildInfo {
      * @param session sessao do maven.
      * @param startTime hora de inicio.
      */
-    public BuildInfo(MavenProject project, MavenSession session, Date startTime) {
+    public BuildInfo(final MavenProject project, final MavenSession session, final Date startTime) {
         this.project = project;
         this.startTime = startTime;
         this.session = session;
@@ -99,7 +99,7 @@ public class BuildInfo {
      * Calcula o tempo de build e define o buildTime.
      */
     public void calculateBuildTime() {
-        long currentTs = new Date().getTime();
+        final long currentTs = new Date().getTime();
         buildTime = currentTs - startTime.getTime();
     }
 }

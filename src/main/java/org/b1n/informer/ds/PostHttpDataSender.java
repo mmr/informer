@@ -5,7 +5,6 @@ import java.util.Map;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 
-
 /**
  * Data Sender que usa HTTP.
  * @author Marcio Ribeiro
@@ -16,7 +15,7 @@ public class PostHttpDataSender extends HttpDataSender {
      * Construtor.
      * @param serverUrl url de servidor.
      */
-    public PostHttpDataSender(String serverUrl) {
+    public PostHttpDataSender(final String serverUrl) {
         super(serverUrl);
     }
 
@@ -26,8 +25,8 @@ public class PostHttpDataSender extends HttpDataSender {
      * @return o metodo.
      */
     @Override
-    protected HttpMethod getMethod(Map<String, String> data) {
-        PostMethod method = new PostMethod(getServerUrl());
+    protected HttpMethod getMethod(final Map<String, String> data) {
+        final PostMethod method = new PostMethod(getServerUrl());
         method.setRequestBody(getNameValuePairs(data));
         return method;
     }

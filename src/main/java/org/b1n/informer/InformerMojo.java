@@ -61,7 +61,7 @@ public class InformerMojo extends AbstractMojo {
      * @required
      * @readonly
      */
-    private boolean offline = false;
+    private final boolean offline = false;
 
     /**
      * Projeto corrente e filhos.
@@ -178,15 +178,15 @@ public class InformerMojo extends AbstractMojo {
         }
 
         try {
-            DataSender ds = getDataSender();
+            final DataSender ds = getDataSender();
 
-            JSONObject json = new JSONObject();
+            final JSONObject json = new JSONObject();
             json.put("masterProject", masterProjectInfo);
             if (!MODULES.isEmpty()) {
                 json.put("modules", MODULES.values());
             }
             ds.sendData(JSONSerializer.toJSON(json).toString());
-        } catch (CouldNotSendDataException e) {
+        } catch (final CouldNotSendDataException e) {
             getLog().info(e.getCause());
         }
     }
@@ -202,18 +202,18 @@ public class InformerMojo extends AbstractMojo {
             return dataSender;
         }
         try {
-            Class<DataSender> dsClass = (Class<DataSender>) Class.forName(this.dataSenderClassName);
-            Constructor<DataSender> constructor = dsClass.getDeclaredConstructor(new Class[] { String.class });
+            final Class<DataSender> dsClass = (Class<DataSender>) Class.forName(this.dataSenderClassName);
+            final Constructor<DataSender> constructor = dsClass.getDeclaredConstructor(new Class[] { String.class });
             return constructor.newInstance(this.server);
-        } catch (NoSuchMethodException e) {
+        } catch (final NoSuchMethodException e) {
             throw new CouldNotSendDataException(e);
-        } catch (InstantiationException e) {
+        } catch (final InstantiationException e) {
             throw new CouldNotSendDataException(e);
-        } catch (IllegalAccessException e) {
+        } catch (final IllegalAccessException e) {
             throw new CouldNotSendDataException(e);
-        } catch (InvocationTargetException e) {
+        } catch (final InvocationTargetException e) {
             throw new CouldNotSendDataException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (final ClassNotFoundException e) {
             throw new CouldNotSendDataException(e);
         }
     }

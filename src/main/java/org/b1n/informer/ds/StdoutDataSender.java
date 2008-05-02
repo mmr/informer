@@ -14,7 +14,7 @@ public class StdoutDataSender implements DataSender {
      * Construtor.
      * @param serverUrl url de servidor.
      */
-    public StdoutDataSender(String serverUrl) {
+    public StdoutDataSender(final String serverUrl) {
         // do nothing
     }
 
@@ -24,7 +24,7 @@ public class StdoutDataSender implements DataSender {
      * @return resposta.
      * @throws CouldNotSendDataException caso nao consiga mostrar dados.
      */
-    public String sendData(String data) throws CouldNotSendDataException {
+    public String sendData(final String data) throws CouldNotSendDataException {
         LOG.info(data);
         return null;
     }

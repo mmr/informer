@@ -5,7 +5,6 @@ import java.util.Map;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
 
-
 /**
  * Data Sender que usa HTTP.
  * @author Marcio Ribeiro
@@ -16,7 +15,7 @@ public class GetHttpDataSender extends HttpDataSender {
      * Construtor.
      * @param serverUrl url de servidor.
      */
-    public GetHttpDataSender(String serverUrl) {
+    public GetHttpDataSender(final String serverUrl) {
         super(serverUrl);
     }
 
@@ -26,8 +25,8 @@ public class GetHttpDataSender extends HttpDataSender {
      * @return metodo.
      */
     @Override
-    protected HttpMethod getMethod(Map<String, String> data) {
-        GetMethod method = new GetMethod(getServerUrl());
+    protected HttpMethod getMethod(final Map<String, String> data) {
+        final GetMethod method = new GetMethod(getServerUrl());
         method.setQueryString(getNameValuePairs(data));
         return method;
     }
