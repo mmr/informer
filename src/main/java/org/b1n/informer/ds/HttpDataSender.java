@@ -10,6 +10,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.log4j.Logger;
 
 /**
  * Data Sender que usa HTTP.
@@ -19,6 +20,12 @@ import org.apache.commons.httpclient.NameValuePair;
 public abstract class HttpDataSender implements DataSender {
     /** Sever url. */
     private final String serverUrl;
+
+    /** Numero maximo de tentativas para tolerancia a falha de rede. */
+    private static final int MAX_ATTEMPTS = 3;
+
+    /** Logger. */
+    private static final Logger LOG = Logger.getLogger(HttpDataSender.class);
 
     /**
      * Construtor.
@@ -37,18 +44,28 @@ public abstract class HttpDataSender implements DataSender {
     public String sendData(final String data) throws CouldNotSendDataException {
         final Map<String, String> d = new HashMap<String, String>();
         d.put("buildInfo", data);
+
+        int attempt = 0;
         final HttpMethod method = getMethod(d);
         try {
-            final int statusCode = new HttpClient().executeMethod(method);
-            if (statusCode != HttpStatus.SC_OK) {
-                throw new CouldNotSendDataException("Error: " + method.getStatusLine());
+            while (attempt < MAX_ATTEMPTS) {
+                try {
+                    final int statusCode = new HttpClient().executeMethod(method);
+                    if (statusCode == HttpStatus.SC_OK) {
+                        LOG.debug(method.getURI() + " : OK");
+                        return method.getResponseBodyAsString();
+                    }
+                } catch (final IOException e) {
+                    // do nothing, try again
+                    LOG.debug(e);
+                }
+                attempt++;
             }
-            return method.getResponseBodyAsString();
-        } catch (final IOException e) {
-            throw new CouldNotSendDataException(e);
         } finally {
             method.releaseConnection();
         }
+
+        throw new CouldNotSendDataException("Error: " + method.getStatusLine());
     }
 
     /**
