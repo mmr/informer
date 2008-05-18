@@ -1,7 +1,7 @@
 package org.b1n.informer.core.domain;
 
 import org.b1n.framework.persistence.EntityNotFoundException;
-import org.b1n.framework.persistence.HibernateEntityDao;
+import org.b1n.framework.persistence.SimpleEntityDao;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -10,7 +10,7 @@ import org.hibernate.criterion.Restrictions;
  * @author Marcio Ribeiro
  * @date Jan 21, 2008
  */
-public class UserDao extends HibernateEntityDao<User> {
+public class UserDao extends SimpleEntityDao<User> {
     /**
      * Devolve o usuario com o nome passado.
      * @param userName o nome do usuario.

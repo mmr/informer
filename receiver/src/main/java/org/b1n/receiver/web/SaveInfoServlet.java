@@ -15,15 +15,15 @@ import net.sf.json.JSONSerializer;
 import org.apache.commons.beanutils.DynaBean;
 import org.b1n.framework.persistence.DaoLocator;
 import org.b1n.framework.persistence.EntityNotFoundException;
-import org.b1n.receiver.domain.Build;
-import org.b1n.receiver.domain.Host;
-import org.b1n.receiver.domain.HostDao;
-import org.b1n.receiver.domain.ModuleBuild;
-import org.b1n.receiver.domain.Project;
-import org.b1n.receiver.domain.ProjectBuild;
-import org.b1n.receiver.domain.ProjectDao;
-import org.b1n.receiver.domain.User;
-import org.b1n.receiver.domain.UserDao;
+import org.b1n.informer.core.domain.Build;
+import org.b1n.informer.core.domain.Host;
+import org.b1n.informer.core.domain.HostDao;
+import org.b1n.informer.core.domain.ModuleBuild;
+import org.b1n.informer.core.domain.Project;
+import org.b1n.informer.core.domain.ProjectBuild;
+import org.b1n.informer.core.domain.ProjectDao;
+import org.b1n.informer.core.domain.User;
+import org.b1n.informer.core.domain.UserDao;
 
 /**
  * Salva dados.

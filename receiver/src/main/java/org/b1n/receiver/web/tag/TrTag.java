@@ -3,7 +3,7 @@ package org.b1n.receiver.web.tag;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.jstl.core.LoopTagStatus;
 
-import org.b1n.receiver.domain.Build;
+import org.b1n.informer.core.domain.Build;
 
 /**
  * @author Marcio Ribeiro

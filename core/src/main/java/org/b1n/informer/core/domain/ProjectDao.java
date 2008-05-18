@@ -1,7 +1,7 @@
 package org.b1n.informer.core.domain;
 
 import org.b1n.framework.persistence.EntityNotFoundException;
-import org.b1n.framework.persistence.RecordEntityDao;
+import org.b1n.framework.persistence.SimpleEntityDao;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -10,7 +10,7 @@ import org.hibernate.criterion.Restrictions;
  * @author Marcio Ribeiro
  * @date Jan 21, 2008
  */
-public class ProjectDao extends RecordEntityDao<Project> {
+public class ProjectDao extends SimpleEntityDao<Project> {
 
     /**
      * Devolve um projeto pela chave groupId, artifactId, version.

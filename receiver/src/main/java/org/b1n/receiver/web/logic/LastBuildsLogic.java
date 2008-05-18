@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.b1n.framework.persistence.DaoLocator;
-import org.b1n.receiver.domain.ProjectBuild;
-import org.b1n.receiver.domain.ProjectBuildDao;
+import org.b1n.informer.core.domain.ProjectBuild;
+import org.b1n.informer.core.domain.ProjectBuildDao;
 import org.vraptor.annotations.Component;
 import org.vraptor.annotations.Out;
 import org.vraptor.annotations.Parameter;

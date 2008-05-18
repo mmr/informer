@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.b1n.framework.persistence.RecordEntity;
+import org.b1n.framework.persistence.SimpleEntity;
 
 /**
  * Usuario.
@@ -18,7 +18,7 @@ import org.b1n.framework.persistence.RecordEntity;
 @Entity
 @Table(name = "builduser")
 @SequenceGenerator(name = "seq_builduser", sequenceName = "seq_builduser")
-public class User extends RecordEntity {
+public class User extends SimpleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_builduser")
     private Long id;

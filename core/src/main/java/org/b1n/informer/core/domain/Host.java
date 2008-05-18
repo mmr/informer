@@ -9,7 +9,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.b1n.framework.persistence.RecordEntity;
+import org.b1n.framework.persistence.SimpleEntity;
 
 /**
  * Maquina onde o build esta sendo executado.
@@ -19,7 +19,7 @@ import org.b1n.framework.persistence.RecordEntity;
 @Entity
 @Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "hostName", "hostIp" }) })
 @SequenceGenerator(name = "seq_host", sequenceName = "seq_host")
-public class Host extends RecordEntity {
+public class Host extends SimpleEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq_host")
     private Long id;

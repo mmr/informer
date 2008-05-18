@@ -1,7 +1,7 @@
 package org.b1n.informer.core.domain;
 
 import org.b1n.framework.persistence.EntityNotFoundException;
-import org.b1n.framework.persistence.HibernateEntityDao;
+import org.b1n.framework.persistence.SimpleEntityDao;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 
@@ -10,7 +10,7 @@ import org.hibernate.criterion.Restrictions;
  * @author Marcio Ribeiro
  * @date Jan 21, 2008
  */
-public class HostDao extends HibernateEntityDao<Host> {
+public class HostDao extends SimpleEntityDao<Host> {
     /**
      * Devolve o host com o nome passado.
      * @param hostName o nome do host.
@@ -22,7 +22,7 @@ public class HostDao extends HibernateEntityDao<Host> {
         crit.add(Restrictions.eq("hostName", hostName));
         final Host host = (Host) crit.uniqueResult();
         if (host == null) {
-            throw new EntityNotFoundException(User.class);
+            throw new EntityNotFoundException(Host.class);
         }
         return host;
     }

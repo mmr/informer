@@ -1,5 +1,6 @@
 package org.b1n.receiver.domain;
 
+import org.b1n.informer.core.domain.Host;
 import org.b1n.receiver.EntityTestCase;
 
 /**
