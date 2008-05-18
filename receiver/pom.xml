@@ -8,7 +8,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.b1n.informer</groupId>
-    <artifactId>b1n-receiver</artifactId>
+    <artifactId>b1n-informer-receiver</artifactId>
     <packaging>war</packaging>
     <version>4.0.0</version>
     <name>receiver</name>
