@@ -1,4 +1,4 @@
-package org.b1n.receiver.domain;
+package org.b1n.informer.core.domain;
 
 import org.b1n.framework.persistence.EntityNotFoundException;
 import org.b1n.framework.persistence.RecordEntityDao;

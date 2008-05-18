@@ -1,4 +1,4 @@
-package org.b1n.receiver.domain;
+package org.b1n.informer.core.domain;
 
 import java.util.Date;
 
