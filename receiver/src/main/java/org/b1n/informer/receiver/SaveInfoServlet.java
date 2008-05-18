@@ -70,6 +70,11 @@ public class SaveInfoServlet extends HttpServlet {
     protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
         final String buildInfo = req.getParameter(PARAM_BUILD_INFO);
         final DynaBean data = (DynaBean) JSONSerializer.toJava(JSONSerializer.toJSON(buildInfo));
+
+        if (data == null) {
+            throw new ServletException("Requisicao invalida.");
+        }
+
         final ProjectBuild projectBuild = createProjectBuild(data);
         createModulesBuild(data, projectBuild);
     }
