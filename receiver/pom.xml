@@ -16,20 +16,14 @@
     <dependencies>
         <dependency>
             <groupId>org.b1n.framework</groupId>
-            <artifactId>b1n-persistence</artifactId>
-            <version>1.0.2</version>
+            <artifactId>b1n-web</artifactId>
+            <version>2.0.0</version>
         </dependency>
 
         <dependency>
-            <groupId>postgresql</groupId>	
-            <artifactId>postgresql</artifactId>
-            <version>8.2-504.jdbc3</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.vraptor</groupId>
-            <artifactId>vraptor</artifactId>
-            <version>2.3</version>
+            <groupId>org.b1n.informer</groupId>
+            <artifactId>b1n-informer-core</artifactId>
+            <version>4.0.0</version>
         </dependency>
 
         <dependency>
