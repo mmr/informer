@@ -1,0 +1,64 @@
+* {
+  font-family: Arial, Verdana, sans-serif;
+}
+h1 {
+  text-align: center;
+  color: dimgray;
+}
+
+table {
+  width: 80%;
+  background: whitesmoke;
+  border-collapse: collapse
+}
+
+table th, table td {
+  border: 1px solid silver;  
+  padding: 0.2em;
+}
+
+table th {
+  background: gainsboro;
+  text-align: left;
+  border-bottom: 2px solid silver;
+}
+
+td.hour {
+  text-align: center;
+}
+
+td.buildTime {
+  text-align: right;
+}
+
+tr.withoutTests td {
+  color: tomato;
+}
+
+tr.deploy td {
+  color: cadetblue;
+}
+
+/* --NOT WORKING-- */
+/*
+tr.even td {
+  background-color: whitesmoke;
+}
+
+tr.odd td {
+  background-color: gray;
+}
+*/
+
+td.tests, td.deploy {
+  text-align: center;
+}
+
+a:link, a:visited, a:hover, a:active {
+  text-decoration: none;
+  color: inherit;
+}
+
+a:hover {
+  text-decoration: underline;
+}
