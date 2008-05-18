@@ -82,13 +82,6 @@ public class BuildInfo {
     }
 
     /**
-     * @return inicio de build.
-     */
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    /**
      * @return o tempo de build em milisegundos.
      */
     public long getBuildTime() {
