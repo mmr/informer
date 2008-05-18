@@ -10,7 +10,7 @@
   <uri>http://b1n.org/receiver</uri>
   <tag>
     <name>buildTime</name>
-    <tagclass>org.b1n.receiver.web.tag.BuildTimeTag</tagclass>
+    <tagclass>org.b1n.informer.receiver.tag.BuildTimeTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <attribute>
       <name>value</name>
@@ -21,7 +21,7 @@
 
   <tag>
     <name>bool</name>
-    <tagclass>org.b1n.receiver.web.tag.BoolTag</tagclass>
+    <tagclass>org.b1n.informer.receiver.tag.BoolTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <attribute>
       <name>value</name>
@@ -32,7 +32,7 @@
 
   <tag>
     <name>tr</name>
-    <tagclass>org.b1n.receiver.web.tag.TrTag</tagclass>
+    <tagclass>org.b1n.informer.receiver.tag.TrTag</tagclass>
     <bodycontent>JSP</bodycontent>
     <attribute>
       <name>build</name>
