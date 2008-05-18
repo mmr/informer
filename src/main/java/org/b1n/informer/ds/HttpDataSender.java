@@ -20,9 +20,6 @@ public abstract class HttpDataSender implements DataSender {
     /** Sever url. */
     private final String serverUrl;
 
-    /** Numero maximo de tentativas para tolerancia a falha de rede. */
-    private static final int MAX_ATTEMPTS = 3;
-
     /**
      * Construtor.
      * @param serverUrl url de servidor.
@@ -34,32 +31,38 @@ public abstract class HttpDataSender implements DataSender {
     /**
      * Envia dados para servidor.
      * @param data dados.
+     * @param maxAttempts numero maximo de tentativas para enviar dados.
      * @throws CouldNotSendDataException caso nao consiga enviar dados.
      * @return resposta.
      */
-    public String sendData(final String data) throws CouldNotSendDataException {
+    public String sendData(final String data, final Integer maxAttempts) throws CouldNotSendDataException {
         final Map<String, String> d = new HashMap<String, String>();
         d.put("buildInfo", data);
 
         int attempt = 0;
         final HttpMethod method = getMethod(d);
         checkRequest(method);
+        StringBuilder errorMsg = new StringBuilder();
         try {
-            while (attempt < MAX_ATTEMPTS) {
+            while (attempt < maxAttempts) {
                 try {
                     final int statusCode = new HttpClient().executeMethod(method);
                     if (statusCode == HttpStatus.SC_OK) {
                         return method.getResponseBodyAsString();
                     }
                 } catch (final IOException e) {
-                    // do nothing, try again
+                    errorMsg.append(e);
                 }
                 attempt++;
             }
         } finally {
             method.releaseConnection();
         }
-        throw new CouldNotSendDataException(method.getStatusLine().toString());
+
+        if (errorMsg.length() > 0) {
+            throw new CouldNotSendDataException(errorMsg.toString());
+        }
+        return null;
     }
 
     /**

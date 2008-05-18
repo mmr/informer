@@ -21,10 +21,11 @@ public class StdoutDataSender implements DataSender {
     /**
      * Mostra dados em stdout.
      * @param data dados.
+     * @param maxAttempts numero maximo de tentativas.
      * @return resposta.
      * @throws CouldNotSendDataException caso nao consiga mostrar dados.
      */
-    public String sendData(final String data) throws CouldNotSendDataException {
+    public String sendData(final String data, final Integer maxAttempts) throws CouldNotSendDataException {
         LOG.info(data);
         return null;
     }

@@ -86,11 +86,18 @@ public class InformerMojo extends AbstractMojo {
     private String action;
 
     /**
-     * Tempo minimo para considerar build.
+     * Tempo minimo para considerar build (em milissegundos).
      * @parameter default-value="20000"
      * @required
      */
-    private Integer minimumBuildTime;
+    private Integer minBuildTime;
+
+    /**
+     * Numero maximo de tentativas para enviar report.
+     * @parameter default-value="5"
+     * @required
+     */
+    private Integer maxAttempts;
 
     /**
      * Classe do data sender.
@@ -112,8 +119,6 @@ public class InformerMojo extends AbstractMojo {
         if (offline) {
             return;
         }
-
-        //        session.getSettings().
 
         // Inicia build
         if (project.isExecutionRoot()) {
@@ -173,7 +178,7 @@ public class InformerMojo extends AbstractMojo {
      */
     private void sendBuildInfo() {
         endTimeMasterProject();
-        if (masterProjectInfo.getBuildTime() < minimumBuildTime) {
+        if (masterProjectInfo.getBuildTime() < minBuildTime) {
             getLog().info("Fast build!");
             return;
         }
@@ -187,7 +192,7 @@ public class InformerMojo extends AbstractMojo {
         String data = JSONSerializer.toJSON(json).toString();
 
         try {
-            ds.sendData(data);
+            ds.sendData(data, maxAttempts);
         } catch (final CouldNotSendDataException e) {
             getLog().error("Nao foi possivel enviar dados!");
             getLog().debug("Server: " + server);

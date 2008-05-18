@@ -9,8 +9,9 @@ public interface DataSender {
     /**
      * Envia dados sobre build.
      * @param data dados.
+     * @param maximumAttempts numero maximo de tentativas para enviar dados.
      * @return identificador de build.
      * @throws CouldNotSendDataException caso nao consiga enviar dados.
      */
-    String sendData(String data) throws CouldNotSendDataException;
+    String sendData(final String data, final Integer maximumAttempts) throws CouldNotSendDataException;
 }
