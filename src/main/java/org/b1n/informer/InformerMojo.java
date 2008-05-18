@@ -14,6 +14,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.b1n.informer.ds.CouldNotCreateDataSenderException;
 import org.b1n.informer.ds.CouldNotSendDataException;
 import org.b1n.informer.ds.DataSender;
 
@@ -177,27 +178,31 @@ public class InformerMojo extends AbstractMojo {
             return;
         }
 
-        try {
-            final DataSender ds = getDataSender();
-
-            final JSONObject json = new JSONObject();
-            json.put("masterProject", masterProjectInfo);
-            if (!MODULES.isEmpty()) {
-                json.put("modules", MODULES.values());
-            }
-            ds.sendData(JSONSerializer.toJSON(json).toString());
-        } catch (final CouldNotSendDataException e) {
-            getLog().info(e.getCause());
+        final DataSender ds = getDataSender();
+        final JSONObject json = new JSONObject();
+        json.put("masterProject", masterProjectInfo);
+        if (!MODULES.isEmpty()) {
+            json.put("modules", MODULES.values());
         }
+        String data = JSONSerializer.toJSON(json).toString();
+
+        try {
+            ds.sendData(data);
+        } catch (final CouldNotSendDataException e) {
+            getLog().error("Nao foi possivel enviar dados!");
+            getLog().debug("Server: " + server);
+            getLog().debug("Causa: " + e);
+        }
+        getLog().debug("Dados: " + data);
+
     }
 
     /**
      * Cria data sender.
      * @return instancia de data sender.
-     * @throws CouldNotSendDataException caso nao consiga enviar dados.
      */
     @SuppressWarnings("unchecked")
-    private DataSender getDataSender() throws CouldNotSendDataException {
+    private DataSender getDataSender() {
         if (dataSender != null) {
             return dataSender;
         }
@@ -206,15 +211,15 @@ public class InformerMojo extends AbstractMojo {
             final Constructor<DataSender> constructor = dsClass.getDeclaredConstructor(new Class[] { String.class });
             return constructor.newInstance(this.server);
         } catch (final NoSuchMethodException e) {
-            throw new CouldNotSendDataException(e);
+            throw new CouldNotCreateDataSenderException(e);
         } catch (final InstantiationException e) {
-            throw new CouldNotSendDataException(e);
+            throw new CouldNotCreateDataSenderException(e);
         } catch (final IllegalAccessException e) {
-            throw new CouldNotSendDataException(e);
+            throw new CouldNotCreateDataSenderException(e);
         } catch (final InvocationTargetException e) {
-            throw new CouldNotSendDataException(e);
+            throw new CouldNotCreateDataSenderException(e);
         } catch (final ClassNotFoundException e) {
-            throw new CouldNotSendDataException(e);
+            throw new CouldNotCreateDataSenderException(e);
         }
     }
 }

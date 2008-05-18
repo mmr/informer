@@ -10,7 +10,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.log4j.Logger;
 
 /**
  * Data Sender que usa HTTP.
@@ -23,9 +22,6 @@ public abstract class HttpDataSender implements DataSender {
 
     /** Numero maximo de tentativas para tolerancia a falha de rede. */
     private static final int MAX_ATTEMPTS = 3;
-
-    /** Logger. */
-    private static final Logger LOG = Logger.getLogger(HttpDataSender.class);
 
     /**
      * Construtor.
@@ -47,25 +43,23 @@ public abstract class HttpDataSender implements DataSender {
 
         int attempt = 0;
         final HttpMethod method = getMethod(d);
+        checkRequest(method);
         try {
             while (attempt < MAX_ATTEMPTS) {
                 try {
                     final int statusCode = new HttpClient().executeMethod(method);
                     if (statusCode == HttpStatus.SC_OK) {
-                        LOG.debug(method.getURI() + " : OK");
                         return method.getResponseBodyAsString();
                     }
                 } catch (final IOException e) {
                     // do nothing, try again
-                    LOG.debug(e);
                 }
                 attempt++;
             }
         } finally {
             method.releaseConnection();
         }
-
-        throw new CouldNotSendDataException("Error: " + method.getStatusLine());
+        throw new CouldNotSendDataException(method.getStatusLine().toString());
     }
 
     /**
@@ -86,6 +80,15 @@ public abstract class HttpDataSender implements DataSender {
             params.add(new NameValuePair(entry.getKey(), entry.getValue()));
         }
         return params.toArray(new NameValuePair[params.size()]);
+    }
+
+    /**
+     * Oportunidade para filho adicionar checagens antes do request ser feito.
+     * @param method metodo http.
+     * @throws CouldNotSendDataException caso nao consiga enviar dados.
+     */
+    protected void checkRequest(final HttpMethod method) throws CouldNotSendDataException {
+        // hook
     }
 
     /**
