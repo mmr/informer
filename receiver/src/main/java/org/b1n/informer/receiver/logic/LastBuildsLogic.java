@@ -1,4 +1,4 @@
-package org.b1n.receiver.web.logic;
+package org.b1n.informer.receiver.logic;
 
 import java.text.DateFormat;
 import java.text.NumberFormat;

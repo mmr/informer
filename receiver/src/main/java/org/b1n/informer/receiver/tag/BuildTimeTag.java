@@ -1,4 +1,4 @@
-package org.b1n.receiver.web.tag;
+package org.b1n.informer.receiver.tag;
 
 import java.text.NumberFormat;
 
