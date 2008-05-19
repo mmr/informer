@@ -1,6 +1,6 @@
 package org.b1n.informer.core.domain;
 
-import org.b1n.informer.core.EntityTestCase;
+import org.b1n.framework.persistence.test.EntityTestCase;
 
 /**
  * @author Marcio Ribeiro
