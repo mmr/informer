@@ -14,6 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>versions</module>
         <module>core</module>
         <module>plugin</module>
         <module>receiver</module>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.b1n.pom</groupId>
+        <artifactId>b1n-pom</artifactId>
+        <version>2.0.0</version>
+    </parent>
+
+    <groupId>org.b1n.informer</groupId>
+    <artifactId>b1n-informer-versions</artifactId>
+    <name>b1n-informer-versions</name>
+    <version>2.0.0</version>
+    <packaging>pom</packaging>
+
+    <properties>
+        <b1nVersion>2.0.0</b1nVersion>
+    </properties>
+
+    <scm>
+        <connection>scm:svn:http://b1n.googlecode.com/svn/informer/trunk</connection>
+        <developerConnection>scm:svn:http://b1n.googlecode.com/svn/informer/trunk</developerConnection>
+        <url>scm:svn:http://b1n.googlecode.com/svn/informer/trunk</url>
+    </scm>
+
+    <dependencies>
+        <dependency>
+            <groupId>hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+            <version>1.8.0.7</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.b1n.framework</groupId>
+                <artifactId>b1n-persistence</artifactId>
+                <version>${b1nVersion}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.b1n.framework</groupId>
+                <artifactId>b1n-web</artifactId>
+                <version>${b1nVersion}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
