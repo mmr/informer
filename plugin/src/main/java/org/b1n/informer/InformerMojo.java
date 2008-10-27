@@ -57,14 +57,6 @@ public class InformerMojo extends AbstractMojo {
     private MavenProject project;
 
     /**
-     * <code>true</code> se usuario tiver usado opcao -o (offline mode), false se nao.
-     * @parameter default-value="${settings.offline}"
-     * @required
-     * @readonly
-     */
-    private final boolean offline = false;
-
-    /**
      * Projeto corrente e filhos.
      * @parameter expression="${reactorProjects}"
      * @readonly
@@ -116,7 +108,7 @@ public class InformerMojo extends AbstractMojo {
      */
     @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException, MojoFailureException {
-        if (offline) {
+        if (session.getSettings().isOffline()) {
             return;
         }
 
