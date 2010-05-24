@@ -43,7 +43,7 @@ public class BuildInfo {
      * @return <code>true</code> se build esta executando testes, <code>false</code> caso contrario.
      */
     public boolean isWithTests() {
-        return !"true".equals(System.getProperty("maven.test.skip"));
+        return !"true".equals(System.getProperty("maven.test.skip")) && System.getProperty("skipTests") == null;
     }
 
     /**

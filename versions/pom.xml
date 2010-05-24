@@ -10,7 +10,7 @@
     <groupId>org.b1n.informer</groupId>
     <artifactId>b1n-informer-versions</artifactId>
     <name>b1n-informer-versions</name>
-    <version>2.0.0</version>
+    <version>4.0.1</version>
     <packaging>pom</packaging>
 
     <properties>
